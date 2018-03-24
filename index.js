@@ -8,9 +8,11 @@ const router = require('./router');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-
+//mongo setup
 mongoose.Promise = global.Promise;
 mongoose.connect( 'mongodb://localhost/learnShareDb', { useMongoClient: true, });
+
+// redis client
 
 // App Setup
 app.use(morgan('combined'));

@@ -1,14 +1,19 @@
 const Share = require('../models/share');
 const jwt = require('jwt-simple');
 const config = require('../services/config')
-// const ObjectId = require('mongodb').ObjectId;
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
+// const redisClient = require('redis');
+// const redisClient = redis.createClient({host : 'localhost', port : 6379});
 
-// mongoose.Types.ObjectId("<object_id>")
+const redisClient = require('../redis');
 
+redisClient.on('ready',function() {
+ console.log("Redis is ready");
+});
 
-// || config.secret
-// a note
+redisClient.on('error',function(error) {
+ console.log("Error in Redis", error);
+});
 
 exports.create = function(req, res, next) {
 
@@ -32,13 +37,23 @@ exports.create = function(req, res, next) {
 }
 
 exports.index = function(req, res, next) {
-  console.log('req', req.body)
 
-  Share.find()
-    .then(shares => res.send(shares))
-    .catch(next);
+  redisClient.get("shares", async (error, result) => {
+    if(result) {
+      result = await JSON.parse(result);
+      res.send(result);
+    }
+    else {
+      Share.find()
+        .then(async dbShares => {
+          let sharesss = JSON.stringify(dbShares)
+          await redisClient.setex("shares", 360, sharesss);
+          res.send(dbShares);
+        })
+        .catch(next);
+    }
+  })
 }
-// db.messages.find({$text: {$search: "smart birds who cook"}}, {score: {$meta: "text Score"}}).sort({score:{$meta:"text Score"}})
 
 exports.search = function(req, res, next) {
   console.log('req', req.params);
@@ -50,49 +65,3 @@ exports.search = function(req, res, next) {
     })
     .catch(next);
 }
-// exports.detail = function(req, res, next) {
-
-//   console.log('req.params', req.params);
-//   Act.findById(req.params.id)
-//     .then(act => {
-//       console.log('\nact\n', act)
-//       res.send(act)
-//     })
-//     .catch(next);
-
-// }
-
-// exports.journal = function(req, res, next) {
-
-//   console.log('hereeeeee in journal', req.params);
-
-//   Act.find({ "user": req.params.id })
-//     .then(acts => {
-//       console.log('acts', acts)
-//       res.send(acts)
-//     })
-//     .catch(next);
-
-// }
-//
-// exports.signature = function(req, res, next) {
-//
-//   console.log('here!, yayay', req.body)
-//   Act.findByIdAndUpdate(
-//     req.params.id,
-//     { $push:
-//       { "signatures":
-//         {
-//           name: req.body.name,
-//           email: req.body.email,
-//           address: req.body.address,
-//           date: Date.now()
-//         }
-//       }
-//     },
-//     { safe: true, new : true }
-//   )
-//   .then(model => res.send(model))
-//   .catch(next);
-//
-// }
