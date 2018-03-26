@@ -44,7 +44,7 @@ exports.create = function(req, res, next) {
 
 exports.index = function(req, res, next) {
 
-  redisClient.get("shares", async (error, result) => {
+  client.get("shares", async (error, result) => {
     if(result) {
       result = await JSON.parse(result);
       res.send(result);
@@ -53,7 +53,7 @@ exports.index = function(req, res, next) {
       Share.find()
         .then(async dbShares => {
           let sharesss = JSON.stringify(dbShares)
-          await redisClient.setex("shares", 360, sharesss);
+          await client.setex("shares", 360, sharesss);
           res.send(dbShares);
         })
         .catch(next);
