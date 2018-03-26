@@ -2,15 +2,14 @@ const Share = require('../models/share');
 const jwt = require('jwt-simple');
 const config = require('../services/config')
 const mongoose = require('mongoose')
-const redis = require('redis');
 
 if (process.env.REDISTOGO_URL) {
-  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
-  var redis = require("redis").createClient(rtg.port, rtg.hostname);
+  const rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  const redis = require("redis").createClient(rtg.port, rtg.hostname);
 
   redis.auth(rtg.auth.split(":")[1]);
 } else {
-  var redis = require("redis").createClient();
+  const redis = require("redis").createClient();
 }
 
 redis.on('ready',function() {
