@@ -9,17 +9,26 @@ if (process.env.REDISTOGO_URL) {
   const redisURL  = url.parse(process.env.REDISTOGO_URL);
   const client    = redis.createClient(redisURL.port, redisURL.hostnamem, {no_ready_check: true});
   client.auth(redisURL.auth.split(":")[1]);
+  client.on('ready',function() {
+   console.log("Redis is ready");
+  });
+
+  client.on('error',function(error) {
+   console.log("Error in Redis", error);
+  });
+
 } else {
   const client = require("redis").createClient();
+  client.on('ready',function() {
+   console.log("Redis is ready");
+  });
+
+  client.on('error',function(error) {
+   console.log("Error in Redis", error);
+  });
+
 }
 
-client.on('ready',function() {
- console.log("Redis is ready");
-});
-
-client.on('error',function(error) {
- console.log("Error in Redis", error);
-});
 
 exports.create = function(req, res, next) {
 
