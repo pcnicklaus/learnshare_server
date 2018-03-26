@@ -2,7 +2,7 @@ const Share = require('../models/share');
 const jwt = require('jwt-simple');
 const config = require('../services/config')
 const mongoose = require('mongoose')
-const redisClient = require('redis');
+const redis = require('redis');
 const redisClient = redis.createClient({host : 'localhost', port : 6379});
 
 redisClient.on('ready',function() {
