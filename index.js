@@ -11,11 +11,11 @@ const cors = require('cors');
 //mongo setup
 mongoose.Promise = global.Promise;
 
-if (process.env.REDISTOGO_URL) {
-  mongoose.connect( 'mongodb://<dbuser>:<dbpassword>@ds123919.mlab.com:23919/heroku_nv3tfzxb', { useMongoClient: true, });
-} else {
-  mongoose.connect( 'mongodb://localhost/learnShareDb', { useMongoClient: true, });
-}
+// if (process.env.REDISTOGO_URL) {
+  mongoose.connect( 'mongodb://<admin>:<password>@ds123919.mlab.com:23919/heroku_nv3tfzxb', { useMongoClient: true, });
+// } else {
+//   mongoose.connect( 'mongodb://localhost/learnShareDb', { useMongoClient: true, });
+// }
 
 
 // redis client
