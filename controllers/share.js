@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 // const redisClient = require('redis');
 // const redisClient = redis.createClient({host : 'localhost', port : 6379});
 
-const redisClient = require('../redis');
+const redisClient = require('../redis_server');
 
 redisClient.on('ready',function() {
  console.log("Redis is ready");
