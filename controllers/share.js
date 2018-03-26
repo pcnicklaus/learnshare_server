@@ -3,13 +3,21 @@ const jwt = require('jwt-simple');
 const config = require('../services/config')
 const mongoose = require('mongoose')
 const redis = require('redis');
-const redisClient = redis.createClient({host : 'localhost', port : 6379});
 
-redisClient.on('ready',function() {
+if (process.env.REDISTOGO_URL) {
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  var redis = require("redis").createClient(rtg.port, rtg.hostname);
+
+  redis.auth(rtg.auth.split(":")[1]);
+} else {
+  var redis = require("redis").createClient();
+}
+
+redis.on('ready',function() {
  console.log("Redis is ready");
 });
 
-redisClient.on('error',function(error) {
+redis.on('error',function(error) {
  console.log("Error in Redis", error);
 });
 
