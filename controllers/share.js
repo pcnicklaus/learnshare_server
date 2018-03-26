@@ -2,21 +2,22 @@ const Share = require('../models/share');
 const jwt = require('jwt-simple');
 const config = require('../services/config')
 const mongoose = require('mongoose')
+const redis = require('redis');
+const url = require('url');
 
 if (process.env.REDISTOGO_URL) {
-  const rtg   = require("url").parse(process.env.REDISTOGO_URL);
-  const redis = require("redis").createClient(rtg.port, rtg.hostname);
-
-  redis.auth(rtg.auth.split(":")[1]);
+  const redisURL  = url.parse(process.env.REDISTOGO_URL);
+  const client    = redis.createClient(redisURL.port, redisURL.hostnamem, {no_ready_check: true});
+  client.auth(redisURL.auth.split(":")[1]);
 } else {
-  const redis = require("redis").createClient();
+  const client = require("redis").createClient();
 }
 
-redis.on('ready',function() {
+client.on('ready',function() {
  console.log("Redis is ready");
 });
 
-redis.on('error',function(error) {
+client.on('error',function(error) {
  console.log("Error in Redis", error);
 });
 
