@@ -12,7 +12,7 @@ const cors = require('cors');
 mongoose.Promise = global.Promise;
 
 // if (process.env.REDISTOGO_URL) {
-  mongoose.connect( 'mongodb://<admin>:<password>@ds123919.mlab.com:23919/heroku_nv3tfzxb', { useMongoClient: true, });
+  mongoose.connect( 'mongodb://admin:password@ds123919.mlab.com:23919/heroku_nv3tfzxb', { useMongoClient: true, });
 // } else {
 //   mongoose.connect( 'mongodb://localhost/learnShareDb', { useMongoClient: true, });
 // }
