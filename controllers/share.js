@@ -4,30 +4,15 @@ const config = require('../services/config')
 const mongoose = require('mongoose')
 const redis = require('redis');
 const url = require('url');
-
+let client;
 
 if (process.env.REDISTOGO_URL) {
   const redisURL  = url.parse(process.env.REDISTOGO_URL);
-  const client    = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+  client    = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
   client.auth(redisURL.auth.split(":")[1]);
-  client.on('ready',function() {
-   console.log("Redis is ready");
-  });
-
-  client.on('error',function(error) {
-   console.log("Error in Redis", error);
-  });
 
 } else {
-  const client = require("redis").createClient();
-  client.on('ready',function() {
-   console.log("Redis is ready");
-  });
-
-  client.on('error',function(error) {
-   console.log("Error in Redis", error);
-  });
-
+  client = require("redis").createClient();
 }
 
 
